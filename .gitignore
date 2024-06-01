@@ -1,0 +1,177 @@
+# Node modules and build directories
+node_modules/
+dist/
+dist-ssr/
+build/
+.cache/
+.next/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Dependency locks
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Local environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Serverless
+.serverless/
+.envrc
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# IntelliJ
+/.idea/
+*.iml
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS generated files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Directories potentially containing sensitive information
+.vscode/
+.idea/
+
+# Test coverage
+coverage/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Static site generator caches
+.cache/
+public/
+
+# Temporary files
+tmp/
+temp/
+
+# Bundler directories
+.bundle
+
+# Web files
+index.html
+
+# Parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Storybook
+.storybook/
+.out/
+
+# SvelteKit build
+.svelte-kit/
+
+# VuePress
+.vuepress/dist
+
+# Nuxt
+.nuxt
+
+# Angular
+.angular
+
+# Gatsby
+.cache/
+public
+
+# Next.js
+.next
+
+# Remix
+.build
+
+# Capacitor
+ios/App/App.xcodeproj/xcuserdata
+ios/App/App.xcodeproj/project.xcworkspace/xcuserdata
+android/.gradle
+android/app/build
+
+# Firebase
+firebase-debug.log
+.firebaserc
+
+# Quasar
+.quasar/
+
+# VSCode directories and files
+.vscode/
+.history/
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask files
+instance/
+
+# Django
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.sqlite3
+db.sqlite3
+media
+
+# JetBrains files
+.idea/
+
+# SQL dumps
+*.sql
+
+# Other IDE specific files
+*.iml
+*.ipr
+*.iws
+
+# AWS SAM build artifacts
+.aws-sam/build/
+
+# Swagger
+.swagger-codegen/
+.swagger/
+swagger.json
+swagger.yaml
+
+# Private keys
+*.pem
+*.key
