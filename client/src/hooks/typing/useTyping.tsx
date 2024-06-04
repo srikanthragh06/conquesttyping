@@ -10,10 +10,12 @@ const useTyping = () => {
     const wordCursor = usePracticeStore((state) => state.wordCursor);
     const characterCursor = usePracticeStore((state) => state.characterCursor);
     const pageNumber = usePracticeStore((state) => state.pageNumber);
+    const mode = usePracticeStore((state) => state.mode);
+    const duration = usePracticeStore((state) => state.duration);
 
     useEffect(() => {
         reset();
-    }, []);
+    }, [mode, duration]);
 
     useEffect(() => {
         completeTyping();

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { generateRandomParagraph } from "../utils/generateRandomParagraph";
 
 type PracticeStoreType = {
     nWords: number;
@@ -84,58 +85,12 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
         mode: "time",
 
         reset: () => {
-            const wordsArray = [
-                "apple",
-                "banana",
-                "cherry",
-                "date",
-                "elderberry",
-                "fig",
-                "grape",
-                "honeydew",
-                "kiwi",
-                "lemon",
-                "mango",
-                "nectarine",
-                "orange",
-                "papaya",
-                "quince",
-                "raspberry",
-                "strawberry",
-                "tangerine",
-                "ugli",
-                "violet",
-                "watermelon",
-                "xigua",
-                "yam",
-                "zucchini",
-                "avocado",
-                "blueberry",
-                "cranberry",
-                "dragonfruit",
-                "eggplant",
-                "fennel",
-                "grapefruit",
-                "huckleberry",
-                "iceberg",
-                "jalapeno",
-                "kale",
-                "lime",
-                "mulberry",
-                "navel",
-                "olive",
-                "peach",
-                "plum",
-                "quinoa",
-                "radish",
-                "spinach",
-                "tomato",
-                "ugni",
-                "valencia",
-                "walnut",
-                "xylocarp",
-                "yogurt",
-            ];
+            const { mode, duration } = get();
+
+            const paragraph = generateRandomParagraph(
+                mode === "time" ? duration * 10 : duration
+            );
+            const wordsArray = paragraph.split(" ");
 
             set((state) => ({
                 ...state,
