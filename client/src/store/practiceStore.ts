@@ -184,7 +184,7 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
                         state.isStarted &&
                         !state.isCompleted) ||
                     (state.mode === "time" &&
-                        state.endTime.getTime() - state.startTime.getTime() >=
+                        Date.now() - state.startTime.getTime() >=
                             state.duration * 1000 &&
                         state.words.length > 0 &&
                         state.isStarted &&

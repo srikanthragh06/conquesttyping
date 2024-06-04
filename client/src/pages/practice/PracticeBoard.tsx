@@ -10,23 +10,18 @@ const PracticeBoard = () => {
 
     return (
         <div
-            className={`mt-3 flex justify-center flex-wrap 
-            roboto-regular text-xl md:text-2xl lg:text-3xl
+            className={`flex justify-center flex-wrap 
+            roboto-regular text-lg md:text-2xl lg:text-4xl
             w-full lg:w-2/3 md:w-5/6
-            bg-color2 rounded-lg 
-            md:px-8 md:py-4 px-4 py-2
+            bg-transparent rounded-lg 
+            md:px-8 md:py-4 px-4
             ${!isCompleted && `select-none`}`}
         >
-            {!isCompleted &&
-                curWords.map((word, wordIndex) => {
-                    return (
-                        <Word
-                            key={wordIndex}
-                            word={word}
-                            wordIndex={wordIndex}
-                        />
-                    );
-                })}
+            {curWords.map((word, wordIndex) => {
+                return (
+                    <Word key={wordIndex} word={word} wordIndex={wordIndex} />
+                );
+            })}
         </div>
     );
 };
