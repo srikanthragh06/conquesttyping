@@ -21,12 +21,9 @@ const useStartTyping = () => {
 
     useEffect(() => {
         if (mode === "time") {
-            console.log("check1");
             let timer: number;
             if (isStarted && !isCompleted) {
-                console.log("check2");
                 timer = setTimeout(() => {
-                    console.log("check3");
                     completeTyping();
                 }, duration * 1000);
             }

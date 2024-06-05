@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import MainPage from "../../components/MainPage";
 import Stopwatch from "../../components/Stopwatch";
 import { usePracticeStore } from "../../store/practiceStore";
@@ -12,9 +11,6 @@ const PracticePage = () => {
     const duration = usePracticeStore((state) => state.duration);
     const words = usePracticeStore((state) => state.words);
     const nCorrectWords = usePracticeStore((state) => state.nCorrectWords);
-    useEffect(() => {
-        console.log({ isStarted, isCompleted });
-    }, [isStarted, isCompleted]);
 
     return (
         <MainPage hasNavbar={true} className="items-center">

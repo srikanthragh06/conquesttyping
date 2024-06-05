@@ -26,6 +26,8 @@ type PracticeStoreType = {
 
     mode: "time" | "words";
 
+    typed: string;
+
     reset: () => void;
 
     startTyping: () => void;
@@ -40,6 +42,8 @@ type PracticeStoreType = {
         lastKeyTab: boolean,
         setLastKeyTab: React.Dispatch<React.SetStateAction<boolean>>
     ) => void;
+
+    // getPracticeResults: () => void;
 };
 
 export const usePracticeStore = create<PracticeStoreType>((set, get) => {
@@ -83,6 +87,7 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
         duration: 60,
 
         mode: "time",
+        typed: "",
 
         reset: () => {
             const { mode, duration } = get();
@@ -111,6 +116,7 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
 
                 nCorrectWords: 0,
                 nWrongAttempts: 0,
+                typed: "",
             }));
         },
 
@@ -311,6 +317,8 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
                     }));
             }
 
+            set((state) => ({ ...state, typed: state.typed + event.key }));
+
             // Discard the default actions that could happen because of typing space
             if (event.key === " ") event.preventDefault();
         },
@@ -400,6 +408,7 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
                         // set characterCursor as 0 regardless
                         set((state) => ({ ...state, characterCursor: 0 }));
                     }
+
                     // if ctrl was not used
                 } else {
                     // the user was on the first character of the word
@@ -471,7 +480,70 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
                         }));
                     }
                 }
+
+                // This part handles the updated of typed
+                let removedChars: number;
+                if (event.ctrlKey) {
+                    if (characterCursor === 0)
+                        removedChars =
+                            words[pageNumber * nWords + wordCursor - 1].length +
+                            1;
+                    else removedChars = characterCursor;
+                } else removedChars = 1;
+
+                set((state) => ({
+                    ...state,
+                    typed:
+                        characterCursor === 0 && !isWrong
+                            ? state.typed
+                            : state.typed.slice(0, -removedChars),
+                }));
             }
         },
+
+        // getPracticeResults: () => {
+        //     const {
+        //         nWords,
+        //         words,
+        //         wordCursor,
+        //         characterCursor,
+        //         pageNumber,
+        //         mode,
+        //         duration,
+        //         startTime,
+        //         endTime,
+        //         nWrongAttempts,
+        //         nCorrectWords,
+        //         isWrong,
+        //         wrongWordIndex,
+        //         wrongCharacterIndex,
+        //     } = get();
+
+        //     const timeTaken =
+        //         mode === "time"
+        //             ? duration
+        //             : (endTime.getTime() - startTime.getTime()) / 1000;
+
+        //     let nCorrectChars: number = 0;
+        //     let accuracy: number;
+        //     if (mode === "words") {
+        //         words.forEach((word) => (nCorrectChars += word.length));
+        //         accuracy =
+        //             ((nCorrectChars - nWrongAttempts) / nCorrectChars) * 100;
+        //     } else {
+        //         if (!isWrong) {
+        //             for (let i = 0; i < wordCursor + 1; i++) {
+        //                 let j = 0;
+        //                 while (
+        //                     j <
+        //                     (i === wordCursor
+        //                         ? characterCursor
+        //                         : words[i].length)
+        //                 )
+        //                     nCorrectChars += 1;
+        //             }
+        //         }
+        //     }
+        // },
     };
 });

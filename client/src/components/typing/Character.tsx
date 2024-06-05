@@ -23,51 +23,79 @@ const Character = ({
     );
 
     const pageNumber = usePracticeStore((state) => state.pageNumber);
+    const words = usePracticeStore((state) => state.words);
     const nWords = usePracticeStore((state) => state.nWords);
+    const mode = usePracticeStore((state) => state.mode);
+    const typed = usePracticeStore((state) => state.typed);
 
     const isCompleted = usePracticeStore((state) => state.isCompleted);
     const isStarted = usePracticeStore((state) => state.isStarted);
 
     const style: CSSProperties = {};
+    const wrongColor = "#ba3232";
+    const correctColor = "#76ABAE";
 
-    if (wordCursor > wordIndex) {
-        if (isWrong) {
-            if (pageNumber * nWords + wordIndex > wrongWordIndex) {
-                style.color = "#ba3232";
-            } else if (pageNumber * nWords + wordIndex < wrongWordIndex) {
-                style.color = "#76ABAE";
-            } else {
-                if (characterIndex >= wrongCharacterIndex) {
-                    style.color = "#ba3232";
-                } else {
-                    style.color = "#76ABAE";
-                }
-            }
-        } else {
-            style.color = "#76ABAE";
-        }
-    } else if (wordCursor === wordIndex) {
-        if (isStarted && !isCompleted) {
-            style.textDecoration = "underline";
-        }
-        if (characterIndex >= characterCursor) {
-            style.color = "grey";
-        } else {
+    if (mode === "words") {
+        if (wordCursor > wordIndex) {
             if (isWrong) {
-                if (
-                    characterIndex < wrongCharacterIndex &&
-                    wrongWordIndex === pageNumber * nWords + wordCursor
-                ) {
-                    style.color = "#76ABAE";
+                if (pageNumber * nWords + wordIndex > wrongWordIndex) {
+                    style.color = wrongColor;
+                } else if (pageNumber * nWords + wordIndex < wrongWordIndex) {
+                    style.color = correctColor;
                 } else {
-                    style.color = "#ba3232";
+                    if (characterIndex >= wrongCharacterIndex) {
+                        style.color = wrongColor;
+                    } else {
+                        style.color = correctColor;
+                    }
                 }
             } else {
-                style.color = "#76ABAE";
+                style.color = correctColor;
             }
+        } else if (wordCursor === wordIndex) {
+            if (isStarted && !isCompleted) {
+                style.textDecoration = "underline";
+            }
+            if (characterIndex >= characterCursor) {
+                style.color = "grey";
+            } else {
+                if (isWrong) {
+                    if (
+                        characterIndex < wrongCharacterIndex &&
+                        wrongWordIndex === pageNumber * nWords + wordCursor
+                    ) {
+                        style.color = correctColor;
+                    } else {
+                        style.color = wrongColor;
+                    }
+                } else {
+                    style.color = correctColor;
+                }
+            }
+        } else {
+            style.color = "grey";
         }
     } else {
-        style.color = "grey";
+        if (
+            wordIndex < wordCursor ||
+            (wordIndex === wordCursor && characterIndex < characterCursor)
+        ) {
+            let trueIndex =
+                words
+                    .slice(0, wordIndex)
+                    .reduce((sum, word) => sum + word.length, 0) +
+                wordIndex +
+                characterIndex;
+
+            if (
+                typed[trueIndex] ===
+                words[nWords * pageNumber + wordIndex][characterIndex]
+            )
+                style.color = correctColor;
+            else style.color = wrongColor;
+        } else {
+            style.color = "grey";
+        }
     }
 
     return (
