@@ -30,6 +30,7 @@ const Character = ({
 
     const isCompleted = usePracticeStore((state) => state.isCompleted);
     const isStarted = usePracticeStore((state) => state.isStarted);
+    const findTrueIndex = usePracticeStore((state) => state.findTrueIndex);
 
     const style: CSSProperties = {};
     const wrongColor = "#ba3232";
@@ -80,12 +81,7 @@ const Character = ({
             wordIndex < wordCursor ||
             (wordIndex === wordCursor && characterIndex < characterCursor)
         ) {
-            let trueIndex =
-                words
-                    .slice(0, wordIndex)
-                    .reduce((sum, word) => sum + word.length, 0) +
-                wordIndex +
-                characterIndex;
+            const trueIndex = findTrueIndex(wordIndex, characterIndex);
 
             if (
                 typed[trueIndex] ===

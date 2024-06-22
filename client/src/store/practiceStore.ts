@@ -43,30 +43,22 @@ type PracticeStoreType = {
         setLastKeyTab: React.Dispatch<React.SetStateAction<boolean>>
     ) => void;
 
-    // getPracticeResults: () => void;
+    findTrueIndex: (wordIndex: number, characterIndex: number) => number;
+
+    getTimeTaken: () => number;
+    getAccuracy: () => number;
+    getWPM: () => number;
+    getCPM: () => number;
+    getNCharacters: () => number;
+    getNCorrectChars: () => number;
+    getNIncorrectChars: () => number;
 };
 
 export const usePracticeStore = create<PracticeStoreType>((set, get) => {
     return {
         nWords: 30,
         words: [],
-        curWords: [
-            "sunset",
-            "horizon",
-            "orange",
-            "pink",
-            "birds",
-            "chirped",
-            "tranquil",
-            "serene",
-            "atmosphere",
-            "breeze",
-            "leaves",
-            "evening",
-            "stars",
-            "magic",
-            "scene",
-        ],
+        curWords: [],
 
         pageNumber: 0,
         wordCursor: 0,
@@ -501,49 +493,85 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
             }
         },
 
-        // getPracticeResults: () => {
-        //     const {
-        //         nWords,
-        //         words,
-        //         wordCursor,
-        //         characterCursor,
-        //         pageNumber,
-        //         mode,
-        //         duration,
-        //         startTime,
-        //         endTime,
-        //         nWrongAttempts,
-        //         nCorrectWords,
-        //         isWrong,
-        //         wrongWordIndex,
-        //         wrongCharacterIndex,
-        //     } = get();
+        findTrueIndex: (wordIndex: number, characterIndex: number) => {
+            const { words, pageNumber, nWords } = get();
+            return (
+                words
+                    .slice(0, pageNumber * nWords + wordIndex)
+                    .reduce((sum, word) => sum + word.length, 0) +
+                (pageNumber * nWords + wordIndex) +
+                characterIndex
+            );
+        },
 
-        //     const timeTaken =
-        //         mode === "time"
-        //             ? duration
-        //             : (endTime.getTime() - startTime.getTime()) / 1000;
+        getTimeTaken: () => {
+            const { mode, duration, endTime, startTime } = get();
 
-        //     let nCorrectChars: number = 0;
-        //     let accuracy: number;
-        //     if (mode === "words") {
-        //         words.forEach((word) => (nCorrectChars += word.length));
-        //         accuracy =
-        //             ((nCorrectChars - nWrongAttempts) / nCorrectChars) * 100;
-        //     } else {
-        //         if (!isWrong) {
-        //             for (let i = 0; i < wordCursor + 1; i++) {
-        //                 let j = 0;
-        //                 while (
-        //                     j <
-        //                     (i === wordCursor
-        //                         ? characterCursor
-        //                         : words[i].length)
-        //                 )
-        //                     nCorrectChars += 1;
-        //             }
-        //         }
-        //     }
-        // },
+            return mode === "time"
+                ? duration
+                : (endTime.getTime() - startTime.getTime()) / 1000;
+        },
+
+        getAccuracy: () => {
+            const { nWrongAttempts, getNCorrectChars } = get();
+            let nCorrectChars: number = getNCorrectChars();
+            return nCorrectChars > 0
+                ? ((nCorrectChars - nWrongAttempts) / nCorrectChars) * 100
+                : 0;
+        },
+
+        getWPM: () => {
+            const { mode, nCorrectWords, getTimeTaken, typed, words } = get();
+            const timeTaken = getTimeTaken();
+
+            return mode === "words"
+                ? nCorrectWords / (timeTaken / 60)
+                : typed.length /
+                      words.reduce(
+                          (avg, word) => avg + word.length / words.length,
+                          0
+                      ) /
+                      (timeTaken / 60);
+        },
+
+        getCPM: () => {
+            const { typed, getTimeTaken } = get();
+            const timeTaken = getTimeTaken();
+
+            return typed.length / (timeTaken / 60);
+        },
+
+        getNCharacters: () => {
+            const { typed } = get();
+            return typed.length;
+        },
+        getNCorrectChars: () => {
+            const {
+                mode,
+                words,
+                typed,
+                wordCursor,
+                characterCursor,
+                findTrueIndex,
+            } = get();
+
+            let nCorrectChars: number = 0;
+            if (mode === "words") {
+                words.forEach((word) => (nCorrectChars += word.length));
+                nCorrectChars += words.length - 1;
+            } else {
+                const wordsString = words.join(" ");
+                const trueIndex = findTrueIndex(wordCursor, characterCursor);
+                for (let i = 0; i < trueIndex; i++) {
+                    if (typed[i] === wordsString[i]) nCorrectChars += 1;
+                }
+            }
+            return nCorrectChars;
+        },
+
+        getNIncorrectChars: () => {
+            const { getNCharacters, getNCorrectChars } = get();
+            return getNCharacters() - getNCorrectChars();
+        },
     };
 });

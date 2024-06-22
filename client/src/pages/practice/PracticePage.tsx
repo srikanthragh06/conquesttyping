@@ -2,7 +2,9 @@ import MainPage from "../../components/MainPage";
 import Stopwatch from "../../components/Stopwatch";
 import { usePracticeStore } from "../../store/practiceStore";
 import PracticeBoard from "./PracticeBoard";
+import PracticeResults from "./PracticeResults";
 import PracticeSetting from "./PracticeSetting";
+import { RiRestartLine } from "react-icons/ri";
 
 const PracticePage = () => {
     const isCompleted = usePracticeStore((state) => state.isCompleted);
@@ -11,6 +13,8 @@ const PracticePage = () => {
     const duration = usePracticeStore((state) => state.duration);
     const words = usePracticeStore((state) => state.words);
     const nCorrectWords = usePracticeStore((state) => state.nCorrectWords);
+
+    const reset = usePracticeStore((state) => state.reset);
 
     return (
         <MainPage hasNavbar={true} className="items-center">
@@ -37,6 +41,26 @@ const PracticePage = () => {
                 )}
             </div>
             <PracticeBoard />
+            <PracticeResults />
+            {isCompleted && isStarted && (
+                <RiRestartLine
+                    onClick={() => reset()}
+                    className="hover:animate-spin hover:opacity-80 active:opacity-60 
+                                cursor-pointer shadow-sm rounded-full 
+                                mt-24 text-5xl"
+                />
+            )}
+            <div
+                className="absolute sm:bottom-[5%] bottom-[1%] 
+                lg:text-sm md:text-[12px] text-[10px]  
+                flex space-x-1 items-center leading-3"
+            >
+                <span className="bg-color2 p-1 rounded-lg opacity-60 cursor-default">
+                    {"Tab + Enter"}
+                </span>
+                <span>-</span>
+                <span className="font-bold opacity-70">restart</span>
+            </div>
         </MainPage>
     );
 };

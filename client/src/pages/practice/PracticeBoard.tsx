@@ -15,6 +15,7 @@ const PracticeBoard = () => {
             w-full lg:w-2/3 md:w-5/6
             bg-transparent rounded-lg 
             md:px-8 md:py-4 px-4
+            ${isCompleted && `hidden`}
             ${!isCompleted && `select-none`}`}
         >
             {curWords.map((word, wordIndex) => {
