@@ -17,7 +17,12 @@ const PracticePage = () => {
     const reset = usePracticeStore((state) => state.reset);
 
     return (
-        <MainPage hasNavbar={true} className="items-center">
+        <MainPage
+            hasNavbar={true}
+            className="items-center"
+            authRequired={false}
+            noAuthRequired={false}
+        >
             <PracticeSetting />
             <div
                 className={`w-full lg:w-2/3 md:w-5/6 mt-3
@@ -45,7 +50,7 @@ const PracticePage = () => {
             {isCompleted && isStarted && (
                 <RiRestartLine
                     onClick={() => reset()}
-                    className="hover:animate-spin hover:opacity-80 active:opacity-60 
+                    className="hover:animate-spin opacity-50 hover:opacity-35 active:opacity-20 
                                 cursor-pointer shadow-sm rounded-full 
                                 mt-24 text-5xl"
                 />

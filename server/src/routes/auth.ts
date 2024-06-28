@@ -34,7 +34,6 @@ router.route("/is-auth").get(isAuth, (req: Request, res: Response) => {
             email: user.email,
             isVerified: user.isVerified,
             isGoogleAuth: user.isGoogleAuth,
-            profilePicId: user.profilePicId,
             createdAt: user.createdAt,
             lastActive: user.lastActive,
         },

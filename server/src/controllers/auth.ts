@@ -192,7 +192,6 @@ export const signinHandler = async (
                             email: user.email,
                             isVerified: user.isVerified,
                             isGoogleAuth: user.isGoogleAuth,
-                            profilePicId: user.profilePicId,
                             createdAt: user.createdAt,
                             lastActive: user.lastActive,
                         },
@@ -234,7 +233,7 @@ export const googleAuthHandler = async (
                 Authorization: `Bearer ${accessToken}`,
             }
         );
-        const { email, picture: profilePicId } = userInfo;
+        const { email } = userInfo;
         if (!email)
             sendClientSideError(
                 req,
@@ -283,7 +282,6 @@ export const googleAuthHandler = async (
                             email: alreadyUser.email,
                             isVerified: alreadyUser.isVerified,
                             isGoogleAuth: alreadyUser.isGoogleAuth,
-                            profilePicId: alreadyUser.profilePicId,
                             createdAt: alreadyUser.createdAt,
                             lastActive: alreadyUser.lastActive,
                         },
@@ -297,7 +295,6 @@ export const googleAuthHandler = async (
                     email,
                     isVerified: true,
                     isGoogleAuth: true,
-                    profilePicId,
                 });
 
                 const jwtToken = jwt.sign(
@@ -319,7 +316,6 @@ export const googleAuthHandler = async (
                             email: newUser.email,
                             isVerified: newUser.isVerified,
                             isGoogleAuth: newUser.isGoogleAuth,
-                            profilePicId: newUser.profilePicId,
                             createdAt: newUser.createdAt,
                             lastActive: newUser.lastActive,
                         },

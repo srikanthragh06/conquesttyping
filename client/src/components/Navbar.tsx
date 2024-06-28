@@ -1,17 +1,34 @@
 import CTTitleLogo from "./CTTitleLogo";
 import { FaKeyboard } from "react-icons/fa";
-import { GiBattleGear } from "react-icons/gi";
+// import { GiBattleGear } from "react-icons/gi";
 // import { IoPeopleCircleSharp } from "react-icons/io5";
 // import { FiLogOut } from "react-icons/fi";
 import { FiLogIn } from "react-icons/fi";
 import { IoPersonSharp } from "react-icons/io5";
+import { FiLogOut } from "react-icons/fi";
 
 import { MdLeaderboard } from "react-icons/md";
 import { IoSearchSharp } from "react-icons/io5";
 
 import NavElement from "./NavElement";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import { removeAuthToken } from "../utils/token";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
+    const removeUserDetails = useAuthStore((state) => state.removeUserDetails);
+
+    const handleLogout = () => {
+        removeUserDetails();
+        setIsLoggedIn(false);
+        removeAuthToken();
+        navigate("/auth");
+    };
+
     return (
         <div
             className="w-full flex justify-between items-center
@@ -25,12 +42,31 @@ const Navbar = () => {
                             w-full sm:w-auto
                             lg:text-xl md:text-lg text-base"
             >
-                <NavElement Logo={FaKeyboard} text="Practice" />
+                <NavElement
+                    Logo={FaKeyboard}
+                    text="Practice"
+                    onClick={() => navigate("/")}
+                />
                 <NavElement Logo={IoSearchSharp} text="Search" />
-                <NavElement Logo={GiBattleGear} text="Compete" />
+                {/* <NavElement Logo={GiBattleGear} text="Compete" /> */}
                 <NavElement Logo={MdLeaderboard} text="Leaderboards" />
                 <NavElement Logo={IoPersonSharp} text="Settings" />
-                <NavElement Logo={FiLogIn} text="Signin" />
+                {isLoggedIn ? (
+                    <NavElement
+                        Logo={FiLogOut}
+                        text="Sign out"
+                        onClick={() => {
+                            handleLogout();
+                            navigate("/auth");
+                        }}
+                    />
+                ) : (
+                    <NavElement
+                        Logo={FiLogIn}
+                        text="Signin"
+                        onClick={() => navigate("/auth")}
+                    />
+                )}
             </div>
         </div>
     );
