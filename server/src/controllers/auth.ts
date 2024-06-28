@@ -17,7 +17,11 @@ import {
     generateUpdatePasswordToken,
 } from "../utils/utils";
 import crypto from "crypto";
-import { sendVerificationMail } from "../utils/mail";
+import {
+    sendPasswordResetConfirmationMail,
+    sendResetPasswordMail,
+    sendVerificationMail,
+} from "../utils/mail";
 
 import jwt from "jsonwebtoken";
 import { sendOutgoingRequest } from "../utils/requestTemplates";
@@ -322,6 +326,178 @@ export const googleAuthHandler = async (
                     }
                 );
             }
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const forgotPasswordHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { email } = req.body;
+
+        await transaction(async (client) => {
+            const user = await findOneWithCondition(client, "Users", ["id"], {
+                email,
+            });
+            if (!user)
+                return sendClientSideError(
+                    req,
+                    res,
+                    `User with email ${email} doesn't exist`
+                );
+
+            const oldPasswordResetToken = await findOneWithCondition(
+                client,
+                "PasswordResetTokens",
+                ["id"],
+                { userId: user.id }
+            );
+            if (oldPasswordResetToken) {
+                await deleteRecords(client, "PasswordResetTokens", {
+                    id: oldPasswordResetToken.id,
+                });
+            }
+
+            const token = crypto.randomBytes(32).toString("hex");
+            await insertRecord(client, "PasswordResetTokens", {
+                userId: user?.id,
+                token,
+            });
+
+            await sendResetPasswordMail(token, email);
+
+            return sendSuccessResponse(
+                req,
+                res,
+                `Password reset link has been sent to ${email}`
+            );
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const resetPasswordHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { password, token } = req.body;
+
+        await transaction(async (client) => {
+            const passwordResetToken = await findOneWithCondition(
+                client,
+                "PasswordResetTokens",
+                ["id", "userId", "expiresAt"],
+                { token }
+            );
+            if (!passwordResetToken)
+                return sendClientSideError(
+                    req,
+                    res,
+                    `Invalid password reset token ${token}`
+                );
+
+            if (passwordResetToken.expiresAt < new Date())
+                return sendClientSideError(
+                    req,
+                    res,
+                    `Password Reset Token ${token} has expired`
+                );
+
+            const { salt, hashedPassword } =
+                await generateSaltAndHashedPassword(password);
+            await updateRecords(
+                client,
+                "Users",
+                { salt, password: hashedPassword },
+                { id: passwordResetToken?.userId }
+            );
+
+            await deleteRecords(client, "PasswordResetTokens", {
+                id: passwordResetToken.id,
+            });
+
+            const { email } = await findOneWithCondition(
+                client,
+                "Users",
+                ["email"],
+                { id: passwordResetToken.userId }
+            );
+
+            try {
+                await sendPasswordResetConfirmationMail(email);
+            } catch (err) {
+                console.error(err);
+            }
+
+            return sendSuccessResponse(
+                req,
+                res,
+                `User password has been reset successfully`
+            );
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const updatePasswordHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        const { user } = req as any;
+
+        if (!user.password)
+            return sendClientSideError(req, res, "User does not have password");
+
+        const isMatch = await checkPassword(oldPassword, user.password);
+        if (!isMatch)
+            return sendClientSideError(req, res, "Incorrect old password");
+
+        await transaction(async (client) => {
+            const { salt, hashedPassword } =
+                await generateSaltAndHashedPassword(newPassword);
+
+            const updatePasswordToken = generateUpdatePasswordToken();
+
+            await updateRecords(
+                client,
+                "Users",
+                {
+                    salt,
+                    password: hashedPassword,
+                    updatePasswordToken,
+                },
+                { id: user.id }
+            );
+
+            const jwtToken = jwt.sign(
+                {
+                    id: user.id,
+                    email: user.email,
+                    updatePasswordToken,
+                },
+                process.env.JWT_SECRET_KEY as string,
+                { expiresIn: "24h" }
+            );
+
+            return sendSuccessResponse(
+                req,
+                res,
+                "Password updated successfully",
+                200,
+                { jwtToken }
+            );
         });
     } catch (err) {
         next(err);

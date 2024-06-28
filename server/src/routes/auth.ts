@@ -1,16 +1,22 @@
 import express from "express";
 import { Request, Response } from "express";
 import {
+    forgotPasswordHandler,
     googleAuthHandler,
+    resetPasswordHandler,
     signinHandler,
     signupHandler,
+    updatePasswordHandler,
     verifyEmailHandler,
 } from "../controllers/auth";
 import {
+    forgotPasswordValidation,
     googleAuthValidation,
     isAuth,
+    resetPasswordValidation,
     signinValidation,
     signupValidation,
+    updatePasswordValidation,
     verifyEmailValidation,
 } from "../middlewares/auth";
 import { sendSuccessResponse } from "../utils/responseTemplates";
@@ -39,5 +45,17 @@ router.route("/is-auth").get(isAuth, (req: Request, res: Response) => {
         },
     });
 });
+
+router
+    .route("/forgot-password")
+    .post(forgotPasswordValidation, forgotPasswordHandler);
+
+router
+    .route("/reset-password")
+    .post(resetPasswordValidation, resetPasswordHandler);
+
+router
+    .route("/update-password")
+    .patch(isAuth, updatePasswordValidation, updatePasswordHandler);
 
 export default router;

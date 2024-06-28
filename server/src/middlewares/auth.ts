@@ -173,3 +173,54 @@ export const isAuth = async (
         next(err);
     }
 };
+
+export const forgotPasswordValidation = [
+    body("email")
+        .exists()
+        .withMessage("Email is required")
+        .isEmail()
+        .withMessage("Incorrect email format"),
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return sendClientSideError(req, res, errors.array()[0].msg);
+        }
+        next();
+    },
+];
+
+export const resetPasswordValidation = [
+    body("password")
+        .exists()
+        .withMessage("Password is required")
+        .isLength({ min: 8, max: 32 })
+        .withMessage("Password must be 8-32 characters in length"),
+    body("token").exists().withMessage("Token is missing"),
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return sendClientSideError(req, res, errors.array()[0].msg);
+        }
+        next();
+    },
+];
+
+export const updatePasswordValidation = [
+    body("oldPassword")
+        .exists()
+        .withMessage("oldPassword is required")
+        .isLength({ min: 8, max: 32 })
+        .withMessage("oldPassword must be 8-32 characters in length"),
+    body("newPassword")
+        .exists()
+        .withMessage("newPassword is required")
+        .isLength({ min: 8, max: 32 })
+        .withMessage("newPassword must be 8-32 characters in length"),
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return sendClientSideError(req, res, errors.array()[0].msg);
+        }
+        next();
+    },
+];
