@@ -11,6 +11,8 @@ import {
 } from "./middlewares/handlers";
 import { consoleLogCyan } from "./utils/colorConsoleLogging";
 import { sendSuccessResponse } from "./utils/responseTemplates";
+import authRouter from "./routes/auth";
+
 config();
 
 // Server Creation
@@ -33,6 +35,9 @@ app.use(logRequest);
 app.get("/", (req: Request, res: Response) => {
     sendSuccessResponse(req, res, "I hear u!!!");
 });
+
+// Main routes
+app.use("/api/auth", authRouter);
 
 // handle 404 error requests
 app.use("/*", urlNotFoundHandler);

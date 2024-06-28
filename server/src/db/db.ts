@@ -43,7 +43,7 @@ export const queryClient = async (
 };
 
 export const transaction = async (
-    operations: (client: PoolClient) => Promise<void>
+    operations: (client: PoolClient) => Promise<any>
 ) => {
     try {
         const client: PoolClient = await pool.connect();

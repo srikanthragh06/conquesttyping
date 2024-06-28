@@ -117,7 +117,7 @@ export const findAllWithCondition = async (
 export const findOneWithCondition = async (
     client: PoolClient,
     table: string,
-    columns?: string[],
+    columns?: string[] | null,
     condition: Conditions = {}
 ): Promise<any> => {
     let query = `SELECT ${

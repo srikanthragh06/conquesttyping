@@ -208,36 +208,3 @@ export const logIncomingResponse = (res: AxiosResponse<any> | undefined) => {
         });
     }
 };
-
-// Log cloud uploads
-export const logCloudUploads = (
-    uploadURL: string,
-    err: Error | null = null
-) => {
-    const cloudUploadsLogsPath = path.join(
-        __dirname,
-        "..",
-        "logs",
-        "cloudUploads"
-    );
-    ensureDirectoryExists(cloudUploadsLogsPath);
-
-    const timestamp = new Date().toLocaleString();
-    const fileName = `${timestamp.split(",")[0].replaceAll("/", "-")}.log`;
-    const filePath = path.join(cloudUploadsLogsPath, fileName);
-
-    let logMessage = `${timestamp}: `;
-    if (err) {
-        logMessage += `Error uploading file in cloud\n${err.message}\n`;
-        consoleLogRed(logMessage);
-    } else {
-        logMessage += `Cloud File Upload successful: ${uploadURL}\n`;
-        consoleLogGreen(logMessage);
-    }
-
-    fs.appendFile(filePath, logMessage + "\n", (err) => {
-        if (err) {
-            console.error("Error writing log file:", err.message);
-        }
-    });
-};
