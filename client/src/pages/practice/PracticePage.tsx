@@ -52,7 +52,9 @@ const PracticePage = () => {
                     onClick={() => reset()}
                     className="hover:animate-spin opacity-50 hover:opacity-35 active:opacity-20 
                                 cursor-pointer shadow-sm rounded-full 
-                                mt-24 text-5xl"
+                                lg:mt-24 lg:text-5xl
+                                sm:mt-20 sm:text-4xl
+                                mt-16 text-3xl"
                 />
             )}
             <div

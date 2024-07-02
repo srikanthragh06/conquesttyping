@@ -52,6 +52,7 @@ type PracticeStoreType = {
     getNCharacters: () => number;
     getNCorrectChars: () => number;
     getNIncorrectChars: () => number;
+    getNCorrectWords: () => number;
 };
 
 export const usePracticeStore = create<PracticeStoreType>((set, get) => {
@@ -515,30 +516,28 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
         getAccuracy: () => {
             const { nWrongAttempts, getNCorrectChars } = get();
             let nCorrectChars: number = getNCorrectChars();
-            return nCorrectChars > 0
-                ? ((nCorrectChars - nWrongAttempts) / nCorrectChars) * 100
-                : 0;
+            const accuracy =
+                nCorrectChars > 0
+                    ? (nCorrectChars / (nCorrectChars + nWrongAttempts)) * 100
+                    : 0;
+            if (accuracy >= 0) return accuracy;
+            else return 0;
         },
 
         getWPM: () => {
-            const { mode, nCorrectWords, getTimeTaken, typed, words } = get();
+            const { getTimeTaken, getNCorrectWords } = get();
             const timeTaken = getTimeTaken();
+            const nCorrectWords = getNCorrectWords();
 
-            return mode === "words"
-                ? nCorrectWords / (timeTaken / 60)
-                : typed.length /
-                      words.reduce(
-                          (avg, word) => avg + word.length / words.length,
-                          0
-                      ) /
-                      (timeTaken / 60);
+            return nCorrectWords / (timeTaken / 60);
         },
 
         getCPM: () => {
-            const { typed, getTimeTaken } = get();
+            const { getTimeTaken, getNCorrectChars } = get();
             const timeTaken = getTimeTaken();
+            const nCorrectChars = getNCorrectChars();
 
-            return typed.length / (timeTaken / 60);
+            return nCorrectChars / (timeTaken / 60);
         },
 
         getNCharacters: () => {
@@ -572,6 +571,22 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
         getNIncorrectChars: () => {
             const { getNCharacters, getNCorrectChars } = get();
             return getNCharacters() - getNCorrectChars();
+        },
+
+        getNCorrectWords: () => {
+            const { mode, words, typed, nWords, pageNumber, wordCursor } =
+                get();
+
+            let nCorrectWords: number = 0;
+            if (mode === "words") {
+                words.forEach(() => (nCorrectWords += 1));
+            } else {
+                const typedWords = typed.split(" ");
+                for (let i = 0; i < nWords * pageNumber + wordCursor; i++)
+                    if (typedWords[i] === words[i]) nCorrectWords += 1;
+            }
+
+            return nCorrectWords;
         },
     };
 });

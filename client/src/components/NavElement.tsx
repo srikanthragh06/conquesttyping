@@ -27,7 +27,7 @@ const NavElement = ({
             >
                 <Logo
                     className={`md:text-3xl text-2xl 
-                                cursor-pointer hover:opacity-60 transition ${className}`}
+                                cursor-pointer hover:opacity-80 active:opacity-60 transition ${className}`}
                 />
             </div>
         </Tooltip>
