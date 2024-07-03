@@ -4,11 +4,12 @@ import { FaKeyboard } from "react-icons/fa";
 // import { IoPeopleCircleSharp } from "react-icons/io5";
 // import { FiLogOut } from "react-icons/fi";
 import { FiLogIn } from "react-icons/fi";
-import { IoPersonSharp } from "react-icons/io5";
+// import { IoPersonSharp } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
+// import { IoMdSettings } from "react-icons/io";
 
 import { MdLeaderboard } from "react-icons/md";
-import { IoSearchSharp } from "react-icons/io5";
+// import { IoSearchSharp } from "react-icons/io5";
 
 import NavElement from "./NavElement";
 import { useNavigate } from "react-router-dom";
@@ -47,10 +48,19 @@ const Navbar = () => {
                     text="Practice"
                     onClick={() => navigate("/")}
                 />
-                <NavElement Logo={IoSearchSharp} text="Search" />
+                {/* <NavElement Logo={IoSearchSharp} text="Search" /> */}
                 {/* <NavElement Logo={GiBattleGear} text="Compete" /> */}
-                <NavElement Logo={MdLeaderboard} text="Leaderboards" />
-                <NavElement Logo={IoPersonSharp} text="Settings" />
+                <NavElement
+                    Logo={MdLeaderboard}
+                    text="Statistics"
+                    onClick={() => {
+                        navigate("/statistics");
+                    }}
+                />
+                {/* <NavElement Logo={IoPersonSharp} text="Settings" /> */}
+                {/* {isLoggedIn && (
+                    <NavElement Logo={IoMdSettings} text="Settings" />
+                )} */}
                 {isLoggedIn ? (
                     <NavElement
                         Logo={FiLogOut}

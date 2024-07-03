@@ -12,6 +12,7 @@ import {
 import { consoleLogCyan } from "./utils/colorConsoleLogging";
 import { sendSuccessResponse } from "./utils/responseTemplates";
 import authRouter from "./routes/auth";
+import practiceTestsRouter from "./routes/practiceTests";
 
 config();
 
@@ -38,6 +39,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Main routes
 app.use("/api/auth", authRouter);
+app.use("/api/practice-tests", practiceTestsRouter);
 
 // handle 404 error requests
 app.use("/*", urlNotFoundHandler);

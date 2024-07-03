@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePracticeStore } from "../../store/practiceStore";
+import useSavePracticeTest from "../../hooks/typing/useSavePracticeTest";
 
 const PracticeResults = () => {
     const isCompleted = usePracticeStore((state) => state.isCompleted);
@@ -42,6 +43,9 @@ const PracticeResults = () => {
             });
     }, [isCompleted]);
 
+    const { saveTestIsLoading, saveTestError, saveTestMessage } =
+        useSavePracticeTest();
+
     return (
         <div
             className={`lg:mt-12 sm:mt-10 mt-12
@@ -50,80 +54,100 @@ const PracticeResults = () => {
                          flex space-x-4`}
         >
             <div
-                className="flex flex-col sm:flex-row 
+                className="flex flex-col items-center space-y-3
+                            rounded-lg shadow-sm bg-color2"
+            >
+                <div
+                    className="flex flex-col sm:flex-row 
                        lg:px-8 lg:py-4 sm:px-6 sm:py-3 px-6 py-2
-                       rounded-lg shadow-sm bg-color2 
+                       
                        lg:space-x-8 sm:space-x-5
                        lg:text-3xl sm:text-2xl text-lg 
                        lg:w-[800px] sm:w-[600px]"
-            >
-                <div className="flex flex-col w-full sm:w-1/2 px-2 sm:space-y-3">
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            CPM:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.CPM.toFixed(1)}
-                        </span>
+                >
+                    <div className="flex flex-col w-full sm:w-1/2 px-2 sm:space-y-3">
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                CPM:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.CPM.toFixed(1)}
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                WPM:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.WPM.toFixed(1)}
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Accuracy:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.accuracy.toFixed(1)} %
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Time taken:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.timeTaken.toFixed(1)} s
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            WPM:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.WPM.toFixed(1)}
-                        </span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Accuracy:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.accuracy.toFixed(1)} %
-                        </span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Time taken:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.timeTaken.toFixed(1)} s
-                        </span>
+                    <div className="flex flex-col w-full sm:w-1/2 px-2 sm:space-y-3">
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Correct characters:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.nCorrectChars}
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Typed characters:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.nCharacters}
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Incorrect characters:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.nIncorrectChars}
+                            </span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                            <span className="text-gray-500 whitespace-nowrap">
+                                Incorrect attempts:
+                            </span>
+                            <span className="text-color3 font-bold ml-4">
+                                {practiceResults.incorrectAttempts}
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div className="flex flex-col w-full sm:w-1/2 px-2 sm:space-y-3">
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Correct characters:
+                <div className="lg:text-lg text-sm">
+                    {saveTestIsLoading ? (
+                        <span className="opacity-60 text-white">
+                            Saving test...
                         </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.nCorrectChars}
+                    ) : saveTestError ? (
+                        <span className="text-red-700">
+                            Failed to save test :(
                         </span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Typed characters:
+                    ) : (
+                        <span className="text-green-700">
+                            {saveTestMessage}
                         </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.nCharacters}
-                        </span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Incorrect characters:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.nIncorrectChars}
-                        </span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                        <span className="text-gray-500 whitespace-nowrap">
-                            Incorrect attempts:
-                        </span>
-                        <span className="text-color3 font-bold ml-4">
-                            {practiceResults.incorrectAttempts}
-                        </span>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

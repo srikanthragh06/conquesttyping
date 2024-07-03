@@ -175,3 +175,5 @@ swagger.yaml
 # Private keys
 *.pem
 *.key
+
+**/notes.md
