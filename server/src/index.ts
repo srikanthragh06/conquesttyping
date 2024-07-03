@@ -13,6 +13,7 @@ import { consoleLogCyan } from "./utils/colorConsoleLogging";
 import { sendSuccessResponse } from "./utils/responseTemplates";
 import authRouter from "./routes/auth";
 import practiceTestsRouter from "./routes/practiceTests";
+import userRouter from "./routes/user";
 
 config();
 
@@ -40,6 +41,7 @@ app.get("/", (req: Request, res: Response) => {
 // Main routes
 app.use("/api/auth", authRouter);
 app.use("/api/practice-tests", practiceTestsRouter);
+app.use("/api/user", userRouter);
 
 // handle 404 error requests
 app.use("/*", urlNotFoundHandler);

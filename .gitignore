@@ -75,7 +75,7 @@ coverage/
 
 # Static site generator caches
 .cache/
-public/
+
 
 # Temporary files
 tmp/
@@ -109,7 +109,7 @@ index.html
 
 # Gatsby
 .cache/
-public
+
 
 # Next.js
 .next

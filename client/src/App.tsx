@@ -10,6 +10,7 @@ import NotFoundPage from "./pages/notFound/NotFound";
 import ForgotPasswordPage from "./pages/forgotPassword/ForgotPasswordPage";
 import VerifyPage from "./pages/verify/VerifyPage";
 import ResetPasswordPage from "./pages/resetPassword/ResetPasswordPage";
+import StatisticsPage from "./pages/statistics/StatisticsPage";
 
 export default function App() {
     const appRouter: RouteObject[] = [
@@ -21,6 +22,7 @@ export default function App() {
         },
         { path: "/forgot-password", element: <ForgotPasswordPage /> },
         { path: "/reset-password/:token", element: <ResetPasswordPage /> },
+        { path: "/statistics", element: <StatisticsPage /> },
         {
             path: "/*",
             element: <NotFoundPage />,

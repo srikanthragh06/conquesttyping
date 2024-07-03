@@ -37,3 +37,43 @@ export const checkPassword = async (
 export const generateUpdatePasswordToken = (): string => {
     return crypto.randomBytes(32).toString("hex");
 };
+
+export const groupAverages = (arr: number[], groupSize: number): number[] => {
+    if (groupSize <= 0) {
+        throw new Error("groupSize must be greater than zero.");
+    }
+
+    const result: number[] = [];
+    for (let i = 0; i < arr.length; i += groupSize) {
+        const group = arr.slice(i, i + groupSize);
+        const average = group.reduce((sum, num) => sum + num, 0) / group.length;
+        result.push(average);
+    }
+    return result;
+};
+
+export const getGroupLabels = (
+    arrayLength: number,
+    groupSize: number,
+    prefix = "group"
+): string[] => {
+    if (groupSize <= 0) {
+        throw new Error("groupSize must be greater than zero.");
+    }
+
+    const labels: string[] = [];
+
+    if (groupSize === 1) {
+        for (let i = 0; i < arrayLength; i++) {
+            labels.push(`${prefix} ${i + 1}`);
+        }
+    } else {
+        for (let i = 0; i < arrayLength; i += groupSize) {
+            const labelStart = i + 1;
+            const labelEnd = Math.min(i + groupSize, arrayLength);
+            labels.push(`${prefix} ${labelStart}-${labelEnd}`);
+        }
+    }
+
+    return labels;
+};
