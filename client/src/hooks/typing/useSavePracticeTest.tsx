@@ -5,6 +5,11 @@ import { getAuthToken } from "../../utils/token";
 import { useAuthStore } from "../../store/authStore";
 
 const useSavePracticeTest = () => {
+    const canSaveTest = usePracticeStore((state) => state.canSaveTest);
+    const markFalseSaveTest = usePracticeStore(
+        (state) => state.markFalseSaveTest
+    );
+
     const isCompleted = usePracticeStore((state) => state.isCompleted);
     const isStarted = usePracticeStore((state) => state.isStarted);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -32,8 +37,7 @@ const useSavePracticeTest = () => {
     const [saveTestIsLoading, setSaveTestIsLoading] = useState<boolean>(false);
 
     const handleSavePracticeTest = async () => {
-        if (!(isLoggedIn && isStarted && isCompleted)) return;
-
+        if (!isLoggedIn || !isStarted || !isCompleted || !canSaveTest) return;
         const token = getAuthToken();
 
         setSaveTestIsLoading(true);
@@ -56,6 +60,7 @@ const useSavePracticeTest = () => {
                 if (!res.data.error) {
                     setSaveTestMessage(res.data.message);
                     setSaveTestError("");
+                    markFalseSaveTest();
                 } else {
                     setSaveTestMessage("");
                     setSaveTestError(res.data.error);
@@ -75,7 +80,7 @@ const useSavePracticeTest = () => {
 
     useEffect(() => {
         handleSavePracticeTest();
-    }, [isCompleted, isStarted]);
+    }, [isCompleted, isStarted, isLoggedIn]);
 
     return { saveTestMessage, saveTestError, saveTestIsLoading };
 };

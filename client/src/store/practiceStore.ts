@@ -2,6 +2,9 @@ import { create } from "zustand";
 import { generateRandomParagraph } from "../utils/generateRandomParagraph";
 
 type PracticeStoreType = {
+    canSaveTest: boolean;
+    markFalseSaveTest: () => void;
+
     nWords: number;
     words: string[];
     curWords: string[];
@@ -57,6 +60,10 @@ type PracticeStoreType = {
 
 export const usePracticeStore = create<PracticeStoreType>((set, get) => {
     return {
+        canSaveTest: true,
+        markFalseSaveTest: () => {
+            set((state) => ({ ...state, canSaveTest: false }));
+        },
         nWords: 30,
         words: [],
         curWords: [],
@@ -110,6 +117,8 @@ export const usePracticeStore = create<PracticeStoreType>((set, get) => {
                 nCorrectWords: 0,
                 nWrongAttempts: 0,
                 typed: "",
+
+                canSaveTest: true,
             }));
         },
 

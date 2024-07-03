@@ -41,7 +41,12 @@ export const addTestHandler = async (
             });
 
             const { practiceTests } = user;
-            const nAvgTests = Math.floor(practiceTests / 20) + 1;
+
+            let nAvgTests: number;
+            if (Math.ceil(practiceTests / 20) > 5)
+                nAvgTests = Math.ceil(practiceTests / 20);
+            else if (practiceTests + 1 < 5) nAvgTests = practiceTests + 1;
+            else nAvgTests = 5;
 
             const { rows: tests } = await queryClient(
                 client,

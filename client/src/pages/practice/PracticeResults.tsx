@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { usePracticeStore } from "../../store/practiceStore";
 import useSavePracticeTest from "../../hooks/typing/useSavePracticeTest";
+import { useAuthStore } from "../../store/authStore";
 
 const PracticeResults = () => {
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
     const isCompleted = usePracticeStore((state) => state.isCompleted);
     const nWrongAttempts = usePracticeStore((state) => state.nWrongAttempts);
 
@@ -135,7 +138,11 @@ const PracticeResults = () => {
                     </div>
                 </div>
                 <div className="lg:text-lg text-sm">
-                    {saveTestIsLoading ? (
+                    {!isLoggedIn ? (
+                        <span className="opacity-60 text-white">
+                            Sign in to save practice test
+                        </span>
+                    ) : saveTestIsLoading ? (
                         <span className="opacity-60 text-white">
                             Saving test...
                         </span>
