@@ -14,6 +14,7 @@ import { sendSuccessResponse } from "./utils/responseTemplates";
 import authRouter from "./routes/auth";
 import practiceTestsRouter from "./routes/practiceTests";
 import userRouter from "./routes/user";
+import { testDatabaseConnection } from "./db/db";
 
 config();
 
@@ -53,4 +54,5 @@ app.use(globalErrorHandler);
 const PORT = process.env.PORT;
 server.listen(PORT, () => {
     consoleLogCyan(`Server is running at http://localhost:${PORT}`);
+    testDatabaseConnection();
 });
