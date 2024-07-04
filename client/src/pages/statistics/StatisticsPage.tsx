@@ -95,7 +95,9 @@ const StatisticsPage = () => {
                                     label="CPM"
                                     value={
                                         mainStats
-                                            ? mainStats.cpm.toString()
+                                            ? mainStats.cpm
+                                                  .toFixed(2)
+                                                  .toString()
                                             : "0"
                                     }
                                 />
@@ -103,7 +105,9 @@ const StatisticsPage = () => {
                                     label="WPM"
                                     value={
                                         mainStats
-                                            ? mainStats.wpm.toString()
+                                            ? mainStats.wpm
+                                                  .toFixed(2)
+                                                  .toString()
                                             : "0"
                                     }
                                 />
