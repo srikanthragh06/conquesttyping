@@ -92,7 +92,7 @@ export const isAuth = async (
             return sendClientSideError(req, res, "Auth-token missing");
 
         type decodedTokenType = {
-            id: string;
+            id: number;
             email: string;
             updatePasswordToken: string;
         };

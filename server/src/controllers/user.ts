@@ -59,19 +59,19 @@ export const getProgressPlotHandler = async (
             return sendClientSideError(req, res, "userId must be an integer");
 
         await transaction(async (client) => {
-            const { practiceTests } = await findOneWithCondition(
+            const userDetails = await findOneWithCondition(
                 client,
                 "Users",
                 ["id", "practiceTests"],
                 { id: userId }
             );
-            if (!practiceTests)
+            if (!userDetails)
                 return sendClientSideError(
                     req,
                     res,
                     `User with userId:${userId} does not exist`
                 );
-
+            const { practiceTests } = userDetails;
             const tests = await findAllWithCondition(
                 client,
                 "PracticeTests",
