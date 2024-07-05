@@ -3,8 +3,11 @@ import { validateEmail, validatePassword } from "../../utils/validation";
 import { signupApi } from "../../api/auth";
 import { setAuthToken } from "../../utils/token";
 import { useAuthStore } from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const useSignup = () => {
+    const navigate = useNavigate();
+
     const setUserDetails = useAuthStore((state) => state.setUserDetails);
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -47,6 +50,7 @@ const useSignup = () => {
 
                     setSignupMessage(res?.data?.message);
                     setSignupError("");
+                    navigate("/");
                 } else {
                     setSignupMessage("");
                     setSignupError(res?.data?.error);
