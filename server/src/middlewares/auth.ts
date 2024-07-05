@@ -121,7 +121,7 @@ export const isAuth = async (
         }
 
         const { id, email, updatePasswordToken } = decodedToken;
-        if (!id)
+        if (!id || !email)
             return sendClientSideError(
                 req,
                 res,

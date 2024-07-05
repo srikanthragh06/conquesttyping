@@ -294,15 +294,25 @@ export const googleAuthHandler = async (
             } else {
                 const username = generateInitialUsername(email);
 
-                const newUser = await insertRecord(client, "Users", {
+                const { id: newUserId } = await insertRecord(client, "Users", {
                     username,
                     email,
                     isVerified: true,
                     isGoogleAuth: true,
                 });
+                const newUser = await findOneWithCondition(
+                    client,
+                    "Users",
+                    ["id", "email", "updatePasswordToken"],
+                    { id: newUserId }
+                );
 
                 const jwtToken = jwt.sign(
-                    { id: newUser.id, email: newUser.email },
+                    {
+                        id: newUser.id,
+                        email: newUser.email,
+                        updatePasswordToken: newUser.updatePasswordToken,
+                    },
                     process.env.JWT_SECRET_KEY as string,
                     { expiresIn: "24h" }
                 );
