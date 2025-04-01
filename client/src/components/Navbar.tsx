@@ -15,6 +15,7 @@ import NavElement from "./NavElement";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { removeAuthToken } from "../utils/token";
+import { TfiStatsUp } from "react-icons/tfi";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -48,10 +49,15 @@ const Navbar = () => {
                     text="Practice"
                     onClick={() => navigate("/")}
                 />
+                <NavElement
+                    Logo={MdLeaderboard}
+                    text="Leaderboard"
+                    onClick={() => navigate("/leaderboard")}
+                />
                 {/* <NavElement Logo={IoSearchSharp} text="Search" /> */}
                 {/* <NavElement Logo={GiBattleGear} text="Compete" /> */}
                 <NavElement
-                    Logo={MdLeaderboard}
+                    Logo={TfiStatsUp}
                     text="Statistics"
                     onClick={() => {
                         navigate("/statistics");

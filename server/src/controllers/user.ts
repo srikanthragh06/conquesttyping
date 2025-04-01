@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { transaction } from "../db/db";
+import { queryClient, transaction } from "../db/db";
 import { findAllWithCondition, findOneWithCondition } from "../db/queries";
 import {
     sendClientSideError,
+    sendServerSideError,
     sendSuccessResponse,
 } from "../utils/responseTemplates";
 import { getGroupLabels, groupAverages } from "../utils/utils";
@@ -92,6 +93,45 @@ export const getProgressPlotHandler = async (
                     labels,
                     values,
                 }
+            );
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const leaderboardHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        await transaction(async (client) => {
+            const leaderboard = await queryClient(
+                client,
+                `
+                SELECT username, "practiceTests" , accuracy, "timeTyping" , cpm, wpm
+                FROM "Users"
+                WHERE "practiceTests">0
+                ORDER BY cpm DESC
+                LIMIT 10
+                `
+            );
+
+            if (!leaderboard || !leaderboard.rows) {
+                return sendClientSideError(
+                    req,
+                    res,
+                    "Failed to get leaderboard"
+                );
+            }
+
+            return sendSuccessResponse(
+                req,
+                res,
+                "Top 10 users by CPM retrieved successfully",
+                200,
+                { leaderboard: leaderboard.rows }
             );
         });
     } catch (err) {

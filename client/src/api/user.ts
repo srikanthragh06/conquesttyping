@@ -20,3 +20,13 @@ export const getProgressPlotApi = async (userId: number) => {
         return error.response;
     }
 };
+
+export const leaderboardApi = async () => {
+    try {
+        const res = await client.get(`/user/leaderboard`);
+        return res;
+    } catch (err) {
+        const error = err as AxiosError;
+        return error.response;
+    }
+};
