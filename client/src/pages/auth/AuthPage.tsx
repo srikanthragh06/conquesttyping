@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import { useState } from "react";
-import CTPicLogo from "../../components/CTPicLogo";
+// import CTPicLogo from "../../components/CTPicLogo";
 import MainPage from "../../components/MainPage";
 import Signin from "./Signin";
 import Signup from "./Signup";
@@ -15,18 +15,18 @@ const AuthPage = () => {
             authRequired={false}
             noAuthRequired={true}
         >
-            <CTPicLogo
+            {/* <CTPicLogo
                 className="md:w-[100px] w-[75px]
                                 mb-12 mt-4"
-            />
+            /> */}
             {isUserSignin ? <Signin /> : <Signup />}
 
             {isUserSignin ? (
                 <p className="w-full text-center sm:text-base text-sm opacity-75 mt-10">
                     New to{" "}
                     <span className="orbitron font-bold">
-                        <span className="text-color4 font-bold">Conquest</span>{" "}
-                        <span className="text-color3 font-bold">Typing</span>
+                        <span className="text-color3 font-bold">G</span>{" "}
+                        <span className="text-color4 font-bold">Typing</span>
                     </span>
                     ?{" "}
                     <span
@@ -40,7 +40,7 @@ const AuthPage = () => {
                 <p className="w-full text-center sm:text-base text-sm opacity-75 mt-10">
                     Already have an account with{" "}
                     <span className="orbitron font-bold">
-                        <span className="text-color4 font-bold">Conquest</span>{" "}
+                        <span className="text-color4 font-bold">G</span>{" "}
                         <span className="text-color3 font-bold">Typing</span>
                     </span>
                     ?{" "}

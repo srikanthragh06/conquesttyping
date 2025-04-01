@@ -5,8 +5,8 @@ import useSignin from "../../hooks/auth/useSignin";
 import FormError from "../../components/FormError";
 import FormMessage from "../../components/FormMessage";
 import FormButton from "../../components/FormButton";
-import useGoogleAuth from "../../hooks/typing/useGoogleAuth";
-import GoogleAuthButton from "../../components/GoogleAuthButton";
+// import useGoogleAuth from "../../hooks/typing/useGoogleAuth";
+// import GoogleAuthButton from "../../components/GoogleAuthButton";
 
 const Signin = () => {
     const navigate = useNavigate();
@@ -20,8 +20,8 @@ const Signin = () => {
         handleSignin,
     } = useSignin();
 
-    const { handleGoogleSignin, googleAuthError, googleAuthIsLoading } =
-        useGoogleAuth();
+    // const { handleGoogleSignin, googleAuthError, googleAuthIsLoading } =
+    //     useGoogleAuth();
 
     return (
         <div
@@ -65,17 +65,17 @@ const Signin = () => {
                 </FormButton>
             </form>
 
-            <p className="text-color4 opacity-60 text-lg mb-6 mt-3">
+            {/* <p className="text-color4 opacity-60 text-lg mb-6 mt-3">
                 {Array(7).fill("--").join("")} or {Array(7).fill("--").join("")}
-            </p>
-            <div className="flex flex-col items-center w-full">
+            </p> */}
+            {/* <div className="flex flex-col items-center w-full">
                 <GoogleAuthButton
                     handleGoogleSignin={handleGoogleSignin}
                     isLoading={googleAuthIsLoading}
                     className="sm:w-1/2 w-5/6"
                 />
                 {googleAuthError && <FormError>{googleAuthError}</FormError>}
-            </div>
+            </div> */}
         </div>
     );
 };
